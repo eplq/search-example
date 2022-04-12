@@ -15,5 +15,6 @@ connection.commit()
 
 
 cursor.execute("SELECT * FROM actor;")
+rowcount = len(cursor.fetchall())
 
-print(f"There are {cursor.rowcount} actors")
+print(f"There are {rowcount} actors")
