@@ -6,15 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Example</title>
 
+    <link rel="stylesheet" href="/static/style.css">
     <script src="/static/main.js" defer></script>
 </head>
 <body>
     <h1>Ejemplo de búsqueda usando técnicas de Throttle y Debounce</h1>
     <p>Ejemplifica e implementa los conceptos explicados por Kyle Cook en su <a href="https://www.youtube.com/watch?v=cjIswDCKgu0">vídeo (YouTube)</a> y en su <a href="https://blog.webdevsimplified.com/2022-03/debounce-vs-throttle/">blog (blog.webdevsimplified.com)</a></p>
 
-    <label for="table">Seleccione una tabla: </label>
-    <select name="table" id="table">
-        <option>Loading...</option>
-    </select>
+    <div class="row">
+        <div class="search">
+            <h2>Búsqueda</h2>
+
+            <h3>Campo de búsqueda</h3>
+            <label for="table">Seleccione una campo: </label>
+            <select name="table" id="table">
+                <option>Loading...</option>
+            </select>
+
+            <h3>Búsqueda normal (event listener directo)</h3>
+            <label for="normal">Término de búsqueda: </label>
+            <input type="text" id="normal" placeholder="término de búsqueda">
+            <p>Peticiones: <span id="normalRequests">0</span></p>
+
+            <h3>Búsqueda con Throttle</h3>
+            <label for="throttle">Término de búsqueda: </label>
+            <input type="text" id="throttle" placeholder="término de búsqueda">
+            <p>Peticiones: <span id="throttleRequests">0</span></p>
+
+            <h3>Búsqueda con Debounce</h3>
+            <label for="debounce">Término de búsqueda: </label>
+            <input type="text" id="debounce" placeholder="término de búsqueda">
+            <p>Peticiones: <span id="debounceRequests">0</span></p>
+        </div>
+        <div class="result">
+            <h2>Resultado</h2>
+            <table>
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>
