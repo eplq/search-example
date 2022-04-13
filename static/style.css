@@ -4,9 +4,13 @@
 }
 
 .search {
-    width: 50%;
+    width: 30%;
 }
 
 .result {
-    width: 50%;
+    width: 70%;
+}
+
+.result table {
+    width: 100%;
 }

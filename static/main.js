@@ -1,14 +1,20 @@
 const selectElement = document.querySelector("select");
+const tableHead = document.querySelector("thead");
 
-fetch("/tables")
+fetch("/fields")
     .then(res => res.json())
-    .then(tables => {
+    .then(field => {
         selectElement.innerHTML = "";
-        tables.forEach(tableName => {
+        field.forEach(fieldName => {
             const option = document.createElement("option");
-            option.value = tableName;
-            option.textContent = tableName;
+            option.value = fieldName;
+            option.textContent = fieldName;
 
             selectElement.append(option);
+
+            const column = document.createElement("th");
+            column.textContent = fieldName;
+
+            tableHead.append(column);
         }); 
     });
