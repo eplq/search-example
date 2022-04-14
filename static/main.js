@@ -95,6 +95,11 @@ function debounce(cb, delay=250) {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             cb(...args);
+
+            // estadísticas
+            debounceCounter++;
+            debounceRequests.textContent = debounceCounter;
+
         }, delay);
     }
 }
@@ -143,6 +148,10 @@ function throttle(cb, delay=1000) {
             cb(...waitingArgs);
             waitingArgs = null;
             setTimeout(timeoutFunction, delay);
+
+            // estadísticas
+            throttleCounter++;
+            throttleRequests.textContent = throttleCounter;
         }
     }
 
@@ -167,6 +176,10 @@ function throttle(cb, delay=1000) {
         cb(...args);
         shouldWait = true;
         setTimeout(timeoutFunction, delay);
+
+        // estadísticas
+        throttleCounter++;
+        throttleRequests.textContent = throttleCounter;
     }
 }
 
