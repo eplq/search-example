@@ -74,3 +74,123 @@ browser-sync start --config bs-config.js
 Se asume que está todo bien instalado y disponible en el PATH.
 
 Esto hará un proxy al que nos conectaremos, y recargará la página cada vez que se produce un cambio en el código.
+
+## Throttle
+
+Consiste en realizar acciones en períodos regulares mientras haya eventos.
+
+El código comentado, disponible en *static/main.js* es el siguiente:
+
+```javascript
+function throttle(cb, delay=1000) {
+    let shouldWait = false;
+    let waitingArgs; // La idea es retener los argumentos para la siguiente llamada al callback
+
+    /*
+     * Cuando no hay argumentos en espera, significa que
+     * que ya no debe de esperar y se sale. Esto es porque
+     * ya se ha llamado al callback y no hay más eventos.
+     * 
+     * Cuando hay argumentos en espera, ejecutamos el callback
+     * y anulamos los argumentos con los que acabamos de ejecutar
+     * el callback, porque ya no son válidos para la siguiente
+     * llamada.
+     * 
+     * Volvemos a programar la ejecución de la función de debajo,
+     * si ha habido un nuevo evento, habrá argumentos por lo que se
+     * ejecutará el callback tras el delay. Si no lo ha habido, los
+     * argumentos en espera seguirán siendo nulos y por tanto ya no
+     * se ejecutará más hasta que vuelva a haber eventos.
+     */
+    const timeoutFunction = () => {
+        if (waitingArgs == null) {
+            shouldWait = false;
+        } else {
+            cb(...waitingArgs);
+            waitingArgs = null;
+            setTimeout(timeoutFunction, delay);
+
+            // estadísticas
+            throttleCounter++;
+            throttleRequests.textContent = throttleCounter;
+        }
+    }
+
+    return (...args) => {
+
+        /*
+         * Si ya está esperando,
+         * actualizamos los argumentos que se pasarán al
+         * callback para tener la información más actualizada.
+         */
+        if (shouldWait) {
+            waitingArgs = args;
+            return;
+        }
+
+        /*
+         * Cuando ya no hay que esperar, llamamos al callback
+         * y establecemos que hay que volver a esperar. Tras ello,
+         * activamos el timeout, que hará que se ejecute la función
+         * de más arriba.
+         */
+        cb(...args);
+        shouldWait = true;
+        setTimeout(timeoutFunction, delay);
+
+        // estadísticas
+        throttleCounter++;
+        throttleRequests.textContent = throttleCounter;
+    }
+}
+```
+
+## Debounce
+
+Consiste en retrasar las acciones que se deban llevar a cabo mientras haya eventos.
+
+El código, de nuevo disponible en *static/main.js*, es el siguiente:
+
+```javascript
+function debounce(cb, delay=250) {
+    /*
+     * La idea fundamental del debouncing es retrasar la ejecución
+     * del callback hasta que ya no haya eventos. Es decir, mientras
+     * el usuario esté escribiendo, no se va a llamar al callback.
+     * 
+     * Esto se consigue predefiniendo un período en el que se esperarán
+     * nuevos eventos. De no darse tras el tiempo establecido, se ejecuta
+     * el callback.
+     */
+
+    /* Establecemos la variable donde guardaremos  */
+    let timeout
+
+    /*
+     * No sabemos los argumentos que se le van a pasar al callback, ya
+     * que la función es de uso general. Por tanto, necesitamos obtener
+     * un número indeterminado de argumentos.
+     * 
+     * Lo conseguimos con el spread operator, u operador de propagación,
+     * que hará que los argumentos pasen a tener forma de array.
+     * 
+     * Luego cuando lo pasamos al callback, volvemos a usar el operador,
+     * para pasarle los argumentos al callback.
+     * 
+     * Respecto al timeout, lo reiniciamos cada vez que se da un evento,
+     * retrasándo la ejecución del callback tanto tiempo como se indica
+     * en la variable delay.
+     */
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            cb(...args);
+
+            // estadísticas
+            debounceCounter++;
+            debounceRequests.textContent = debounceCounter;
+
+        }, delay);
+    }
+}
+```
